@@ -1,0 +1,220 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Beach Cleanup",
+      "date": "Aug 28 2018",
+      "time": "10:00",
+      "location": "Daytona Beach",
+      "description": "Let's clean up this beach.",
+      "organizer": "Pratyaksh Singh",
+      "category": "sustainability",
+      "attendees": [
+        {
+          "id": "abc123",
+          "name": "Pratyaksh"
+        },
+        {
+          "id": "def456",
+          "name": "Adam"
+        },
+        {
+          "id": "ghi789",
+          "name": "greg"
+        },
+        {
+          "id": "jkl101",
+          "name": "Mary Gordon"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Park Cleanup",
+      "date": "Nov 12 2018",
+      "time": "12:00",
+      "location": "132 N Magnolia Street, Orlando, Florida",
+      "description": "We're going to clean up this park.",
+      "organizer": "Pratyaksh Singh",
+      "category": "nature",
+      "attendees": [
+        {
+          "id": "ghi789",
+          "name": "Beth Swanson"
+        },
+        {
+          "id": "jkl101",
+          "name": "Mary Gordon"
+        }
+      ]
+    },
+    {
+      "id": 9686639,
+      "user": {},
+      "category": "education",
+      "organizer": {},
+      "title": "IITm",
+      "description": "DataScience",
+      "location": "IITM campus",
+      "date": "2023-04-13T14:23:00.000Z",
+      "time": "14:00",
+      "attendees": []
+    },
+    {
+      "id": 1810337,
+      "user": {
+        "email": "tim@gmail.com",
+        "password": "pass"
+      },
+      "title": "My Post",
+      "description": "Descr",
+      "image_url": ""
+    },
+    {
+      "id": 708245,
+      "user": {
+        "email": "tim@gmail.com",
+        "password": "pass"
+      },
+      "title": "title",
+      "description": "description",
+      "selected_file": null
+    },
+    {
+      "id": 9686640
+    },
+    {
+      "id": 9686641
+    },
+    {
+      "id": 9686642
+    }
+  ],
+  "register": [
+    {
+      "id": 1,
+      "name": "name",
+      "email": "email",
+      "password": "password",
+      "password_confirmation": "password_confirmation"
+    },
+    {
+      "name": "Tim",
+      "email": "tim@mail.com",
+      "password": "homepas",
+      "password_confirmation": "homepas",
+      "id": 2
+    },
+    {
+      "name": "Tim",
+      "email": "tim@mail.com",
+      "password": "pass",
+      "password_confirmation": "pass",
+      "id": 3
+    },
+    {
+      "name": "Tim",
+      "email": "tim@mail.com",
+      "password": "pass",
+      "password_confirmation": "pass",
+      "id": 4
+    }
+  ],
+  "login": [
+    {
+      "email": "pratyaksh@gmail.com",
+      "password": "pass",
+      "id": 1
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "homepaschange",
+      "id": 2
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "home pass",
+      "id": 3
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "home pass",
+      "id": 4
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "passhome",
+      "id": 5
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "home pass",
+      "id": 6
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "homepass",
+      "id": 7
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "homepass",
+      "id": 8
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "homepass",
+      "id": 9
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "homepass",
+      "id": 10
+    },
+    {
+      "email": "tim@mail.com",
+      "password": "homepass",
+      "id": 11
+    },
+    {
+      "email": "tim@gmai.com",
+      "password": "homepass",
+      "id": 12
+    },
+    {
+      "email": "timi@gmai.com",
+      "password": "homepass",
+      "id": 13
+    },
+    {
+      "email": "baaz@gmail.com",
+      "password": "pass",
+      "id": 14
+    },
+    {
+      "email": "some@gmail.com",
+      "password": "pass",
+      "id": 15
+    },
+    {
+      "email": "tim@gmail.com",
+      "password": "pass",
+      "id": 16
+    },
+    {
+      "email": "jeny@123.com",
+      "password": "homepass",
+      "id": 17
+    },
+    {
+      "email": "jeny@123.com",
+      "password": "homepass",
+      "id": 18
+    },
+    {
+      "email": "jeny@123.com",
+      "password": "homepass",
+      "id": 19
+    }
+  ]
+}

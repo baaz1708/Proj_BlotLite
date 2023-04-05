@@ -58,7 +58,7 @@ class Post(db.Model):
             'author': {
                 'id': self.author.id,
                 'username': self.author.username,
-                'image_file': url_for('static', filename='profile_pics/' + self.author.image_file)
+                'image_file': url_for('static', filename='profile_pics/' + self.author.image_file, _external=True)
             }
         }
     def __repr__(self):

@@ -18,7 +18,7 @@ def home():
 
 @app.route("/about")
 def about():
-    return render_template('about.html',title='About')
+    return jsonify({'about':'This is a blog site'})
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -49,10 +49,6 @@ def login():
             flash('Login Unsuccessful. Please check email and password','danger')
     return render_template('login.html',title='Login',form=form)
 
-@app.route("/logout")
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
 
 def save_picture(form_picture):
     random_hex=secrets.token_hex(8)
@@ -101,7 +97,7 @@ def new_post():
 @app.route("/post/<int:post_id>")
 def post(post_id):
     post=Post.query.get_or_404(post_id)
-    return render_template('post.html',title=post.title,post=post)
+    return jsonify(post.to_dict())
 
 @app.route("/post/<int:post_id>/update", methods=['GET','POST'])
 @login_required
@@ -129,17 +125,14 @@ def delete_post(post_id):
         abort(403)
     db.session.delete(post)
     db.session.commit()
-    flash('Your post has been deleted!','success')
-    return redirect(url_for('home'))
+    return jsonify({'message':'Post deleted'})
 
 @app.route("/user/<string:username>")
 def user_posts(username):
-    page=request.args.get('page',1,type=int)
     user=User.query.filter_by(username=username).first_or_404()
     posts=Post.query.filter_by(author=user)\
-        .order_by(Post.date_posted.desc())\
-        .paginate(page=page,per_page=5)
-    return render_template('user_posts.html',posts=posts,user=user)
+        .order_by(Post.date_posted.desc())
+    return jsonify([post.to_dict() for post in posts])
 
 def send_reset_email(user):
     token=user.get_reset_token()

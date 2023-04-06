@@ -3,11 +3,11 @@
         <h1 class="text-center m-4">Register User</h1>
         <form @submit.prevent="register">
             <div>
-                <label for="name" class="form-label">Name</label>
-                <input type="text" name="name" id="name" v-model="name" value @blur="$v.name.$touch()" class="form-control { error: $v.name.$error }" >
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" id="username" v-model="username" value @blur="$v.username.$touch()" class="form-control { error: $v.username.$error }" >
             </div>
-            <template v-if="$v.name.$error">
-                <p v-if="!$v.name.required" class="errorMessage">
+            <template v-if="$v.username.$error">
+                <p v-if="!$v.username.required" class="errorMessage">
                 Category is required.
                 </p>
             </template>
@@ -34,15 +34,15 @@
             </template>
 
             <div class="mb-3">
-                <label for="password_confirmation" class="form-label">Confirm Password</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" v-model="password_confirmation" value @blur="$v.password_confirmation.$touch()" class="form-control { error: $v.password_confirmation.$error }">
+                <label for="confirm_password" class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" id="confirm_password" v-model="confirm_password" value @blur="$v.confirm_password.$touch()" class="form-control { error: $v.confirm_password.$error }">
             </div>
-            <template v-if="$v.password_confirmation.$error">
-                <p v-if="!$v.password_confirmation.required" class="errorMessage">
+            <template v-if="$v.confirm_password.$error">
+                <p v-if="!$v.confirm_password.required" class="errorMessage">
                 Confirm Password is required.
                 </p>
 
-                <p v-if="!$v.password_confirmation.sameAsPassword" class="errorMessage">
+                <p v-if="!$v.confirm_password.sameAsPassword" class="errorMessage">
                 Passwords do not match.
                 </p>
 
@@ -71,18 +71,18 @@ import { required, sameAs } from 'vuelidate/lib/validators'
 export default {
     data() {
         return {
-            name: '',
+            username: '',
             email: '',
             password: '',
-            password_confirmation: '',
+            confirm_password: '',
             errors: null
         }
     },
     validations:{
-        name: { required },
+        username: { required },
         email: { required },
         password: { required },
-        password_confirmation: { required,
+        confirm_password: { required,
             sameAsPassword: sameAs('password')
         },
     },
@@ -90,10 +90,10 @@ export default {
     methods: {
         register() {
             this.$store.dispatch('registeration/register', {
-                name: this.name,
+                username: this.username,
                 email: this.email,
                 password: this.password,
-                password_confirmation: this.password_confirmation
+                confirm_password: this.confirm_password
             }).then(() => {
                 this.$router.push({ name: 'login' })
             }).catch((err) => {

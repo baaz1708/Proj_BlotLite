@@ -5,9 +5,10 @@
     :to="{ name: 'event-show', params: { id: event.id } }"
   >
     <div class="event-card -shadow">
-      <span class="eyebrow">@{{ event.time }} on {{ event.date | date }}</span>
+      <span class="eyebrow">@{{ event.author.id }} on {{ event.date_posted | date }}</span>
       <h4 class="title">{{ event.title }}</h4>
-      <BaseIcon name="users">{{ event.attendees.length }} attending</BaseIcon>
+      <img :src="event.author.image_file" alt="User Image" class=" rounded-circle article-img"/>
+      <BaseIcon name="users">{{ event.user_id }} attending</BaseIcon>
     </div>
   </router-link>
 </template>
@@ -46,4 +47,9 @@ export default {
   text-decoration: none;
   font-weight: 100;
 }
+.article-img {
+    height: 60px;
+    width: 60px;
+    margin-right: 5px;
+  }
 </style>

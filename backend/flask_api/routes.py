@@ -8,11 +8,14 @@ from flask_api.forms import RegistrationForm,LoginForm,UpdateAccountForm,PostFor
 from flask_api.models import User,Post
 from flask_mail import Message
 from flask import jsonify
+from werkzeug.datastructures import ImmutableMultiDict
 
 @app.route("/")
-@app.route("/home")
+@app.route("/feed")
 def home():
-    posts=Post.query.order_by(Post.date_posted.desc()).all()
+    perPage = request.args.get('perPage', type=int)
+    page = request.args.get('page', type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=perPage).items
     response_data = [post.to_dict() for post in posts]
     return jsonify(response_data)
 
@@ -20,34 +23,39 @@ def home():
 def about():
     return jsonify({'about':'This is a blog site'})
 
-@app.route("/register", methods=['GET','POST'])
+
+@app.route("/register", methods=['POST'])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form=RegistrationForm()
-    if form.validate_on_submit():
+    json_data = request.get_json()
+    formdata = ImmutableMultiDict(json_data)
+    form=RegistrationForm(formdata=formdata, meta={'csrf': False})
+    if form.validate():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-        flash(f'Your account has been created for {form.username.data}! You can now log in','success')
-        return redirect(url_for('login'))
-    return render_template('register.html',title='Register',form=form)
+        return jsonify(user.to_dict())
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                return jsonify({'message':error,'error_in_field':field})
 
-@app.route("/login", methods=['GET','POST'])
+@app.route("/login", methods=['POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form=LoginForm()
-    if form.validate_on_submit():
+    json_data = request.get_json()
+    formdata = ImmutableMultiDict(json_data)
+    form=LoginForm(formdata=formdata, meta={'csrf': False})
+    if form.validate():
         user=User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
             login_user(user,remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return jsonify(user.to_dict())
         else:
-            flash('Login Unsuccessful. Please check email and password','danger')
-    return render_template('login.html',title='Login',form=form)
+            return jsonify({'message':'Login Unsuccessful. Please check email and password'})
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                return jsonify({'message':error,'error_in_field':field})
 
 
 def save_picture(form_picture):

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://localhost:5000',
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -12,7 +12,7 @@ const apiClient = axios.create({
 
 export default {
   getEvents(perPage, page) {
-    return apiClient.get('/events?_limit=' + perPage + '&_page=' + page)
+    return apiClient.get('/feed?_limit=' + perPage + '&_page=' + page)
   },
   getEvent(id) {
     return apiClient.get('/events/' + id)
@@ -36,6 +36,6 @@ export default {
     return apiClient.post('/login', login_user)
   },
   getUsers() {
-    return axios.get('http://127.0.0.1:5000/user_list')
+    return apiClient.get('/user_list')
   }
 }

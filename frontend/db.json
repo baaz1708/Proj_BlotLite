@@ -118,6 +118,27 @@
       "password": "pass",
       "password_confirmation": "pass",
       "id": 4
+    },
+    {
+      "name": "NewUser",
+      "email": "mail@gmail.com",
+      "password": "homepass",
+      "password_confirmation": "homepass",
+      "id": 5
+    },
+    {
+      "name": "New2User",
+      "email": "mail@gmail.com",
+      "password": "homepass",
+      "password_confirmation": "homepass",
+      "id": 6
+    },
+    {
+      "name": "NewUser",
+      "email": "mail@gmail.com",
+      "password": "homepass",
+      "password_confirmation": "homepass",
+      "id": 7
     }
   ],
   "login": [
@@ -215,6 +236,11 @@
       "email": "jeny@123.com",
       "password": "homepass",
       "id": 19
+    },
+    {
+      "email": "jeny@123.com",
+      "password": "homepass",
+      "id": 20
     }
   ]
 }

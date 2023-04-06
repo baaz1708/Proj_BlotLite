@@ -11,7 +11,7 @@ export const mutations = {
     LOGIN_DATA (state, userData) {
         state.user = userData
         localStorage.setItem('user', JSON.stringify(userData))
-        axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`
+        //axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`
     },
     CLEAR_USER_DATA () {
         localStorage.removeItem('user')
@@ -21,10 +21,10 @@ export const mutations = {
 
 export const actions = {
     login ({ commit }, credentials) {
-        return EventService.postLogin(credentials).then(() =>{
-            // ({ data }) => {
-            //     console.log('user data is: ', data)
-             commit('LOGIN_DATA', credentials)}
+        return EventService.postLogin(credentials).then((response) =>{
+            const data = response.data;
+            console.log(data);
+            commit('LOGIN_DATA', data)}
                 // return data
             // }
         )

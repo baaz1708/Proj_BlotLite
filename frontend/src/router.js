@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import EventCreate from './views/EventCreate.vue'
-import EventList from './views/EventList.vue'
+import FeedList from './views/FeedList.vue'
 import EventShow from './views/EventShow.vue'
 import NProgress from 'nprogress'
 import store from '@/store/store'
@@ -29,16 +29,16 @@ const router = new Router({
           next();
         }
         if (store.getters['login_user/loggedIn']) {
-          next({ name: 'event-list' })
+          next({ name: 'feed-list' })
         } else {
           next()
         }
       }
     },
     {
-      path: '/events',
-      name: 'event-list',
-      component: EventList,
+      path: '/feeds',
+      name: 'feed-list',
+      component: FeedList,
       meta: { requiresAuth: true },
       props: true
     },

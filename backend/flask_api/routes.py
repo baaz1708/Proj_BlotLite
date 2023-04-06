@@ -11,7 +11,7 @@ from flask import jsonify
 from werkzeug.datastructures import ImmutableMultiDict
 
 @app.route("/")
-@app.route("/feed")
+@app.route("/feeds")
 def home():
     perPage = request.args.get('perPage', type=int)
     page = request.args.get('page', type=int)

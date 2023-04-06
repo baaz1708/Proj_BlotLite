@@ -1,14 +1,14 @@
 <!-- generated using vbase snippet (vbase + tab)  -->
 <template>
   <router-link
-    class="event-link"
-    :to="{ name: 'event-show', params: { id: event.id } }"
+    class="feed-link"
+    :to="{ name: 'event-show', params: { id: feed.id } }"
   >
-    <div class="event-card -shadow">
-      <span class="eyebrow">@{{ event.author.id }} on {{ event.date_posted | date }}</span>
-      <h4 class="title">{{ event.title }}</h4>
-      <img :src="event.author.image_file" alt="User Image" class=" rounded-circle article-img"/>
-      <BaseIcon name="users">{{ event.user_id }} attending</BaseIcon>
+    <div class="feed-card -shadow">
+      <span class="eyebrow">@{{ feed.author.id }} on {{ feed.date_posted | date }}</span>
+      <h4 class="title">{{ feed.title }}</h4>
+      <img :src="feed.author.image_file" alt="User Image" class=" rounded-circle article-img"/>
+      <BaseIcon name="users">{{ feed.user_id }} attending</BaseIcon>
     </div>
   </router-link>
 </template>
@@ -16,7 +16,7 @@
 <script>
 export default {
   props: {
-    event: {
+    feed: {
       type: Object,
       required: true
     }
@@ -28,21 +28,21 @@ export default {
 .-shadow {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.13);
 }
-.event-card {
+.feed-card {
   padding: 20px;
   margin-bottom: 24px;
   transition: all 0.2s linear;
   cursor: pointer;
 }
-.event-card:hover {
+.feed-card:hover {
   transform: scale(1.01);
   box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.2), 0 1px 15px 0 rgba(0, 0, 0, 0.19);
 }
-.event-card > .title {
+.feed-card > .title {
   margin: 0;
 }
 
-.event-link {
+.feed-link {
   color: rgb(0, 0, 0);
   text-decoration: none;
   font-weight: 100;

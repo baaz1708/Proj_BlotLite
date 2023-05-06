@@ -10,7 +10,7 @@
     <address>{{ event.location }}</address>
     <h2>Event details</h2>
     <p>{{ event.description }}</p>
-    <h2>
+    <h2>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
       Attendees
       <span class="badge -fill-gradient">{{
         event.attendees ? event.attendees.length : 0

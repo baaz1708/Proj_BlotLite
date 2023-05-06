@@ -49,9 +49,9 @@ def login():
         user=User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
             login_user(user,remember=form.remember.data)
-            return jsonify(user.to_dict())
+            return jsonify(user.to_dict()), 200
         else:
-            return jsonify({'message':'Login Unsuccessful. Please check email and password'})
+            return jsonify({'message':'Login Unsuccessful. Please check email and password'}), 401
     else:
         for field, errors in form.errors.items():
             for error in errors:

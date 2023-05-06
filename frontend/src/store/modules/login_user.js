@@ -24,10 +24,10 @@ export const actions = {
         return EventService.postLogin(credentials).then((response) =>{
             const data = response.data;
             console.log(data);
-            commit('LOGIN_DATA', data)}
-                // return data
-            // }
-        )
+            if(response.status == 200){
+                commit('LOGIN_DATA', data)
+            }
+        })
     },
     logout ({ commit }) {
         commit('CLEAR_USER_DATA')

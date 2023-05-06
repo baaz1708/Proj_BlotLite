@@ -19,14 +19,6 @@ export default new Vuex.Store({
     user_list
   },
   state: {
-    categories: [
-      'sustainability',
-      'nature',
-      'animal welfare',
-      'housing',
-      'education',
-      'food',
-      'community'
-    ]
+    
   }
 })

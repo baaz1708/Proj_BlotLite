@@ -17,13 +17,16 @@ export default {
   getEvent(id) {
     return apiClient.get('/events/' + id)
   },
-  postEvent(event) {
+  postNewPost(post) {
     const formData = new FormData();
-    formData.append('title', event.title);
-    formData.append('description', event.description);
-    formData.append('selected_file', event.selected_file);
+    formData.append('id', post.id);
+    formData.append('user', post.user);
+    formData.append('title', post.title);
+    formData.append('description', post.description);
+    formData.append('selected_file', post.selected_file);
+    formData.append('timestamp', post.timestamp);
 
-    return apiClient.post('/events', formData, {
+    return apiClient.post('/post/new', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

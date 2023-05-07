@@ -1,6 +1,6 @@
 <template>
   <div class="container p-2">
-    <h1 class="m-4 text-center">Feeds for {{ user.user.name }}</h1>
+    <h1 class="m-4 text-center">Feeds for {{ user.user.username }}</h1>
     <FeedCard v-for="feed in feed.feeds" :key="feed.id" :feed="feed" />
     <template v-if="page != 1">
       <router-link
@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     hasNextPage() {
-      return this.feed.eventsTotal > this.page * this.feed.perPage
+      return this.feed.feedsTotal > this.page * this.feed.perPage
     },
     ...mapState(['feed','user'])
   }

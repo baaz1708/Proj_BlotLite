@@ -6,6 +6,7 @@ import * as notification from '@/store/modules/notification.js'
 import * as registeration from '@/store/modules/registeration.js'
 import * as login_user from '@/store/modules/login_user.js'
 import * as user_list from '@/store/modules/user_list.js'
+import * as post from '@/store/modules/post.js'
 
 Vue.use(Vuex)
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
     notification,
     registeration,
     login_user,
-    user_list
+    user_list,
+    post
   },
   state: {
     

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import EventCreate from './views/EventCreate.vue'
+import PostCreate from './views/PostCreate.vue'
 import FeedList from './views/FeedList.vue'
 import EventShow from './views/EventShow.vue'
 import NProgress from 'nprogress'
@@ -80,9 +80,9 @@ const router = new Router({
       }
     },
     {
-      path: '/event/create',
-      name: 'event-create',
-      component: EventCreate
+      path: '/post/create',
+      name: 'post-create',
+      component: PostCreate
     },
     {
       path: '/404',

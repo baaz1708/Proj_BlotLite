@@ -34,11 +34,11 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-        return jsonify(user.to_dict())
+        return jsonify(user.to_dict()), 201
     else:
         for field, errors in form.errors.items():
             for error in errors:
-                return jsonify({'message':error,'error_in_field':field})
+                return jsonify({'message':error,'error_in_field':field}), 400
 
 @app.route("/login", methods=['POST'])
 def login():

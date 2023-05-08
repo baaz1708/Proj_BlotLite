@@ -20,9 +20,10 @@ export const actions = {
         return EventService.postRegistration(credentials).then((response) => {
             const data = response.data;
             console.log(data);
-            commit('SET_USER_DATA', data)
-                return data
+            if (response.status >= 200) {
+                commit('SET_USER_DATA', data)
+                
             }
-        )
+    })  
     }
 }

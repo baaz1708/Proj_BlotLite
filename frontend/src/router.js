@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import PostCreate from './views/PostCreate.vue'
 import FeedList from './views/FeedList.vue'
-import EventShow from './views/EventShow.vue'
+import MyProfile from './views/MyProfile.vue'
 import NProgress from 'nprogress'
 import store from '@/store/store'
 import NotFound from './views/NotFound.vue'
@@ -59,20 +59,22 @@ const router = new Router({
       component: LoginUser
     },
     {
-      path: '/event/:id',
-      name: 'event-show',
-      component: EventShow,
-      props: true,
+      path: '/profile',
+      name: 'profile',
+      component: MyProfile,
+      meta: { requiresAuth: true },
       beforeEnter(routeTo, routeFrom, next) {
         store
-          .dispatch('event/fetchEvent', routeTo.params.id)
-          .then(event => {
-            routeTo.params.event = event
+          .dispatch('user/setUser')
+          .then(() => {
+            const userdata = store.state.user.user
+            console.log('userdata:(before routeTo params)', userdata)
+            routeTo.params.user = userdata
             next()
           })
           .catch(error => {
             if (error.response && error.response.status === 404) {
-              next({ name: '404', params: { resource: 'event' } })
+              next({ name: '404', params: { resource: '' } })
             } else {
               next({ name: 'network-issue' })
             }

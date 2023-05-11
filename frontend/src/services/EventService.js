@@ -14,8 +14,20 @@ export default {
   getFeeds(perPage, page) {
     return apiClient.get('/feeds?_limit=' + perPage + '&_page=' + page)
   },
-  getEvent(id) {
-    return apiClient.get('/events/' + id)
+  getUser(id) {
+    return apiClient.get('/user/' + id)
+  },
+  updateUser(user){
+    const formData = new FormData();
+    formData.append('username', user.username);
+    formData.append('email', user.email);
+    formData.append('picture', user.image_file);
+    console.log("formData", formData)
+    return apiClient.put('/user/' + user.id, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   },
   postNewPost(post) {
     const formData = new FormData();

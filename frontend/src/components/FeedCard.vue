@@ -2,7 +2,7 @@
 <template>
   <router-link
     class="feed-link"
-    :to="{ name: 'event-show', params: { id: feed.id } }"
+    :to="{ name: 'search-user', params: { id: feed.id } }"
   >
     <div class="feed-card -shadow">
       <span class="eyebrow">@{{ feed.author.id }} on {{ feed.date_posted | date }}</span>

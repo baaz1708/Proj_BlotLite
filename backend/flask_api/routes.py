@@ -3,6 +3,7 @@ import secrets
 from PIL import Image
 from flask import abort, render_template,url_for,flash,redirect,request
 from flask_login import login_user,current_user,logout_user,login_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_api import app,bcrypt,db,mail
 from flask_api.forms import RegistrationForm,LoginForm,UpdateAccountForm,PostForm,RequestResetForm,ResetPasswordForm
 from flask_api.models import User,Post
@@ -48,47 +49,55 @@ def login():
     if form.validate():
         user=User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
+            # access_token = create_access_token(identity=user.id)
             login_user(user,remember=form.remember.data)
-            return jsonify(user.to_dict()), 200
+            return jsonify(current_user.to_dict()), 200
         else:
             return jsonify({'message':'Login Unsuccessful. Please check email and password'}), 401
     else:
         for field, errors in form.errors.items():
             for error in errors:
-                return jsonify({'message':error,'error_in_field':field})
-
-
+                return jsonify({'message':error,'error_in_field':field}), 400
+    
 def save_picture(form_picture):
     random_hex=secrets.token_hex(8)
     _,f_ext=os.path.splitext(form_picture.filename)
     picture_fn=random_hex+f_ext
     picture_path=os.path.join(app.root_path,'static/profile_pics',picture_fn)
 
-    output_size=(100,100)
+    # output_size=(100,100)
     i=Image.open(form_picture)
-    i.thumbnail(output_size)
+    # i.thumbnail(output_size)
 
     i.save(picture_path)
     return picture_fn
 
-@app.route("/account", methods=['GET','POST'])
-@login_required
-def account():
-    form=UpdateAccountForm()
-    if form.validate_on_submit():
-        current_user.username=form.username.data
-        current_user.email=form.email.data
-        if form.picture.data:
-            picture_file=save_picture(form.picture.data)
-            current_user.image_file=picture_file
-        db.session.commit()
-        flash('Your account has been updated!','success')
-        return redirect(url_for('account'))
+@app.route("/user/<int:user_id>", methods=['GET','POST','PUT'])
+def user_account(user_id):
+    if request.method=='PUT':
+        form=UpdateAccountForm(meta={'csrf': False})
+        form.username.data = request.form['username']
+        form.email.data = request.form['email']
+        if 'picture' in request.files:
+            form.picture.data = request.files['picture']
+        if form.validate():
+            user=User.query.filter_by(id=user_id).first_or_404()
+            user.username=form.username.data
+            user.email=form.email.data
+            if form.picture.data:
+                picture_file=save_picture(form.picture.data)
+                user.image_file=picture_file
+            db.session.commit()
+            return jsonify(user.to_dict()), 200
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    return jsonify({'message':error,'error_in_field':field}), 400
     elif request.method=='GET':
-        form.username.data=current_user.username
-        form.email.data=current_user.email
-    image_file = url_for('static',filename='profile_pics/'+current_user.image_file)
-    return render_template('account.html',title='Account',image_file=image_file,form=form)
+        user=User.query.filter_by(id=user_id).first_or_404()
+        posts=Post.query.filter_by(author=user)\
+        .order_by(Post.date_posted.desc())
+        return jsonify({'user':user.to_dict(), 'user_posts':[post.to_dict() for post in posts]})
 
 @app.route("/post/new", methods=['GET','POST'])
 @login_required

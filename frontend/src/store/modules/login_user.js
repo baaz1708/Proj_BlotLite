@@ -1,4 +1,3 @@
-import axios from "axios";
 import EventService from "../../services/EventService";
 
 export const namespaced = true;
@@ -26,6 +25,7 @@ export const actions = {
             console.log(data);
             if(response.status == 200){
                 commit('LOGIN_DATA', data)
+                commit('user/UPDATE_USER', null, { root: true })
             }
         })
     },

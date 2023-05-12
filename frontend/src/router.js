@@ -84,7 +84,8 @@ const router = new Router({
     {
       path: '/post/create',
       name: 'post-create',
-      component: PostCreate
+      component: PostCreate,
+      meta: { requiresAuth: true },
     },
     {
       path: '/404',

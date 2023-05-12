@@ -69,14 +69,7 @@ export default {
       this.$v.$touch()
       if (!this.$v.$invalid) {
         NProgress.start()
-        this.post.timestamp = new Date().toISOString()
-        // from datetime import datetime
-        // @app.route('/create-event', methods=['POST'])
-        // def create_event():
-        //     data = request.get_json()
-        //     datetime_str = data['datetime']
-        //     datetime_obj = datetime.fromisoformat(datetime_str)
-
+        console.log("before dispatch", this.post)
         this.$store
           .dispatch('post/new_post', this.post)
           .then(() => {
@@ -92,28 +85,22 @@ export default {
       }
     },
     createFreshPost() {
-      const user = this.$store.state.user.user
-      const id = Math.floor(Math.random() * 10000000)
+      const user = JSON.parse(localStorage.getItem('user')) || {}
       return {
-        id,
         user: user,
         title: '',
         description: '',
-        selected_file: null,
-        timestamp: '',
+        feed_image: '',
       }
     },
     onFileChange(e) {
       console.log(e.target.files[0])
-      this.post.selected_file = e.target.files[0];
+      this.post.feed_image = e.target.files[0];
     }
   },
   watch: {
-  'post.selected_file': function (newVal, oldVal) {
-    console.log('selected_file changed from', oldVal, 'to', newVal);
-  },
-  'post.timestamp': function (newVal, oldVal) {
-    console.log('timestamp changed from', oldVal, 'to', newVal);
+  'post.feed_image': function (newVal, oldVal) {
+    console.log('feed_image changed from', oldVal, 'to', newVal);
   }
 }
 }

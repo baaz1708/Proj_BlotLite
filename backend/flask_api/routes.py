@@ -16,7 +16,7 @@ from werkzeug.datastructures import ImmutableMultiDict
 def home():
     perPage = request.args.get('perPage', type=int)
     page = request.args.get('page', type=int)
-    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=perPage).items
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=perPage).items
     response_data = [post.to_dict() for post in posts]
     return jsonify(response_data)
 
@@ -59,7 +59,7 @@ def login():
             for error in errors:
                 return jsonify({'message':error,'error_in_field':field}), 400
     
-def save_picture(form_picture):
+def save_profile_picture(form_picture):
     random_hex=secrets.token_hex(8)
     _,f_ext=os.path.splitext(form_picture.filename)
     picture_fn=random_hex+f_ext
@@ -85,7 +85,7 @@ def user_account(user_id):
             user.username=form.username.data
             user.email=form.email.data
             if form.picture.data:
-                picture_file=save_picture(form.picture.data)
+                picture_file=save_profile_picture(form.picture.data)
                 user.image_file=picture_file
             db.session.commit()
             return jsonify(user.to_dict()), 200
@@ -96,20 +96,41 @@ def user_account(user_id):
     elif request.method=='GET':
         user=User.query.filter_by(id=user_id).first_or_404()
         posts=Post.query.filter_by(author=user)\
-        .order_by(Post.date_posted.desc())
+        .order_by(Post.timestamp.desc())
         return jsonify({'user':user.to_dict(), 'user_posts':[post.to_dict() for post in posts]})
 
-@app.route("/post/new", methods=['GET','POST'])
-@login_required
+def save_feed_picture(form_picture):
+    random_hex=secrets.token_hex(8)
+    _,f_ext=os.path.splitext(form_picture.filename)
+    picture_fn=random_hex+f_ext
+    picture_path=os.path.join(app.root_path,'static/post_pics',picture_fn)
+
+    # output_size=(360,420)
+    i=Image.open(form_picture)
+    # i.thumbnail(output_size)
+
+    i.save(picture_path)
+    return picture_fn
+
+@app.route("/post/new", methods=['POST'])
 def new_post():
-    form=PostForm()
-    if form.validate_on_submit():
-        post=Post(title=form.title.data,content=form.content.data,author=current_user)
+    form=PostForm(meta={'csrf': False})
+    form.curr_user.data = request.form['curr_user']
+    form.user_id.data = request.form['user_id']
+    form.title.data = request.form['title']
+    form.description.data = request.form['description']
+    if 'feed_image' in request.files:
+        form.feed_image.data = request.files['feed_image']
+    if form.validate():
+        user=User.query.get(form.user_id.data)
+        if form.feed_image.data:
+            picture_file=save_feed_picture(form.feed_image.data)
+            post = Post(title=form.title.data, description=form.description.data, author=user, feed_image=picture_file)
+        else:
+            post = Post(title=form.title.data, description=form.description.data, author=user)
         db.session.add(post)
         db.session.commit()
-        flash('Your post has been created!','success')
-        return redirect(url_for('home'))
-    return render_template('create_post.html',title='New Post',form=form,legend='New Post')
+        return jsonify(post.to_dict()), 201
 
 @app.route("/post/<int:post_id>")
 def post(post_id):
@@ -143,13 +164,6 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     return jsonify({'message':'Post deleted'})
-
-@app.route("/user/<string:username>")
-def user_posts(username):
-    user=User.query.filter_by(username=username).first_or_404()
-    posts=Post.query.filter_by(author=user)\
-        .order_by(Post.date_posted.desc())
-    return jsonify([post.to_dict() for post in posts])
 
 def send_reset_email(user):
     token=user.get_reset_token()

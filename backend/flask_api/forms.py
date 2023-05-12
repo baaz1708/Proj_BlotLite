@@ -44,17 +44,24 @@ class UpdateAccountForm(FlaskForm):
     
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('That username is taken. Please choose a different one.')
+        if username.data != user.username:
+            user = User.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError('That username is taken. Please choose a different one.')
     
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError('That email is taken. Please choose a different one.')
+        if email.data != user.email:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError('That email is taken. Please choose a different one.')
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    user_id = StringField('User ID', validators=[DataRequired()])
+    curr_user = TextAreaField('Current User', validators=[DataRequired()])
+    feed_image = FileField('Feed Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Post')
 
 class RequestResetForm(FlaskForm):

@@ -37,7 +37,7 @@
         <div class="d-flex flex-wrap">
           <div v-for="(post, index) in userdata.user_posts" :key="index" class="m-1">
             <!-- Replace with your post component -->
-            <img :src="post.image_url" alt="" style="width: 200px; height: 200px; object-fit: cover;">
+            <img :src="post.feed_image" alt="" style="width: 200px; height: 200px; object-fit: cover;">
           </div>
         </div>
       </div>

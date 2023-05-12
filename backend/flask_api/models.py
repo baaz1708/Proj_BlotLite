@@ -44,17 +44,19 @@ class User(db.Model, UserMixin):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    description = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    feed_image = db.Column(db.String(20), nullable=False, default='default.jpg')
 
     def to_dict(self):
         return {
             'id': self.id,
             'title': self.title,
-            'date_posted': self.date_posted.strftime('%Y-%m-%d'),
-            'content': self.content,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'description': self.description,
             'user_id': self.user_id,
+            'feed_image': url_for('static', filename='post_pics/' + self.feed_image, _external=True),
             'author': {
                 'id': self.author.id,
                 'username': self.author.username,
@@ -62,4 +64,4 @@ class Post(db.Model):
             }
         }
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
+        return f"Post('{self.title}', '{self.timestamp}')"

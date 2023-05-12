@@ -31,12 +31,11 @@ export default {
   },
   postNewPost(post) {
     const formData = new FormData();
-    formData.append('id', post.id);
-    formData.append('user', post.user);
+    formData.append('curr_user', post.user);
+    formData.append('user_id', post.user.id);
     formData.append('title', post.title);
     formData.append('description', post.description);
-    formData.append('selected_file', post.selected_file);
-    formData.append('timestamp', post.timestamp);
+    formData.append('feed_image', post.feed_image);
 
     return apiClient.post('/post/new', formData, {
       headers: {

@@ -49,9 +49,10 @@ export const actions = {
       })
   },
   fetchFeeds({ commit, dispatch, state }, { page }) {
+    console.log('before fetch feeds', page)
     return EventService.getFeeds(state.perPage, page)
       .then(response => {
-        console.log('data', response.data)
+        console.log('after fetch feeds', response.data)
         commit('SET_FEEDS_TOTAL', parseInt(response.headers['x-total-count']))
         commit('SET_FEEDS', response.data)
       })

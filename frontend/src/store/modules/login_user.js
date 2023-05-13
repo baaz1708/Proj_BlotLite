@@ -20,9 +20,10 @@ export const mutations = {
 
 export const actions = {
     login ({ commit }, credentials) {
+        console.log("before post login",credentials)
         return EventService.postLogin(credentials).then((response) =>{
             const data = response.data;
-            console.log(data);
+            console.log("after post login",data);
             if(response.status == 200){
                 commit('LOGIN_DATA', data)
                 commit('user/UPDATE_USER', null, { root: true })

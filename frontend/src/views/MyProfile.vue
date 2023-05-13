@@ -10,9 +10,9 @@
         </div>
         <input type="file" ref="fileInput" @change="handleFileChange" style="display: none;">
       </div>
-      <div class="col-sm-9">
+      <div class="col-sm-9 ">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h2>{{ userdata.user.username }}</h2>
+          <h2>@<u>{{ userdata.user.username }}</u></h2>
           <button class="-fill-gradient rounded" @click="editMode = !editMode">Edit</button>
         </div>
         <div v-if="editMode" class="mb-3">
@@ -23,7 +23,7 @@
             <li v-for="(error, index) in errors" :key="index" class="errorMessage">{{ error }}</li>
         </ul>
         </div>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between p-3">
           <p><strong>Posts:</strong> {{ userdata.user_posts.length }}</p>
           <p class="mr-3"><strong>Followers:</strong> {{ followers }}</p>
           <p class="ml-4"><strong>Following:</strong> {{ following }}</p>
@@ -48,7 +48,7 @@
 <script>
 export default {
   data() {
-    console.log('route params', this.$route.params.user)
+    console.log('after route params profile', this.$route.params.user)
     return {
       userdata: this.$route.params.user,
       id: this.$route.params.user.user.id,
@@ -70,8 +70,6 @@ export default {
       console.log('file', file);
     },
     updateUser() {
-      console.log('update user', {username:this.newUsername, "email":this.newEmail, profilepic:this.newProfilePic}),
-      console.log('update user', this.newUsername, this.newEmail, this.newProfilePic)
       // Replace with your API call to update the user
       this.$store.dispatch('user/updateUser', {
           id: this.id,

@@ -68,7 +68,7 @@ const router = new Router({
           .dispatch('user/setUser')
           .then(() => {
             const userdata = store.state.user.user
-            console.log('userdata:(before routeTo params)', userdata)
+            console.log('userdata:(before routeTo params profile)', userdata)
             routeTo.params.user = userdata
             next()
           })

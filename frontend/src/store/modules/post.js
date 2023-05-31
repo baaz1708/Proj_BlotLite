@@ -39,5 +39,20 @@ export const actions = {
                 commit('POST_DATA', data)
             }
         })
+    },
+    deletePost({ commit}, postid) {
+        return EventService.deletePost(postid).then((response) =>{
+            const data = response.data;
+            console.log("after delete post",data);
+        })
+    },
+    update_post({ commit }, post) {
+        return EventService.updatePost(post).then((response) => {
+            const data = response.data;
+            console.log("after update post",data);
+            if (response.status >= 200 && response.status < 400) {
+                commit('POST_DATA', data)
+            }
+        })
     }
 }

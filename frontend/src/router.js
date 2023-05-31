@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import PostCreate from './views/PostCreate.vue'
+import UpdatePost from './views/UpdatePost.vue'
 import FeedList from './views/FeedList.vue'
 import MyProfile from './views/MyProfile.vue'
 import NProgress from 'nprogress'
@@ -85,6 +86,12 @@ const router = new Router({
       path: '/post/create',
       name: 'post-create',
       component: PostCreate,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/post_update/:id',
+      name: 'post-update',
+      component: UpdatePost,
       meta: { requiresAuth: true },
     },
     {

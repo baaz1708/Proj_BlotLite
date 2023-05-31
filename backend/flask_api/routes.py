@@ -184,31 +184,36 @@ def unfollow_user():
     return jsonify(user.to_dict())
 
 
-@app.route("/post/<int:post_id>/update", methods=['GET','POST'])
-@login_required
+@app.route("/update_post/<int:post_id>", methods=['GET','POST','PUT'])
 def update_post(post_id):
     post=Post.query.get_or_404(post_id)
-    if post.author != current_user:
-        abort(403)
-    form=PostForm()
-    if form.validate_on_submit():
+    form=PostForm(meta={'csrf': False})
+    form.title.data = request.form['title']
+    form.description.data = request.form['description']
+    if 'feed_image' in request.files:
+        form.feed_image.data = request.files['feed_image']
+        print("form.feed_image is present")
+    print(form.feed_image.data, form.title.data, form.description.data)
+    if form.validate():
+        if form.feed_image.data:
+            picture_file=save_feed_picture(form.feed_image.data)
+            post.feed_image=picture_file
         post.title=form.title.data
-        post.content=form.content.data
+        post.description=form.description.data
+        print(post.feed_image, post.title, post.description)
         db.session.commit()
-        flash('Your post has been updated!','success')
-        return redirect(url_for('post',post_id=post.id))
-    elif request.method=='GET':
-        form.title.data=post.title
-        form.content.data=post.content
-    return render_template('create_post.html',title='Update Post',form=form,legend='Update Post')
+        return jsonify(post.to_dict()), 204
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                return jsonify({'message':error,'error_in_field':field}), 400
+            
 
-
-@app.route("/post/<int:post_id>/delete", methods=['POST'])
-@login_required
+@app.route("/delete_post/<int:post_id>", methods=['DELETE'])
 def delete_post(post_id):
     post=Post.query.get_or_404(post_id)
-    if post.author != current_user:
-        abort(403)
+    # if post.author != current_user:
+    #     abort(403)
     db.session.delete(post)
     db.session.commit()
     return jsonify({'message':'Post deleted'})

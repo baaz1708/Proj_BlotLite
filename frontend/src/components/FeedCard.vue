@@ -9,7 +9,7 @@
     </router-link>
     <div class="d-flex justify-content-between align-items-center">
       <h4 class="author">{{ feed.author.username }}</h4>
-      <button v-if="feed.author.id !== $store.state.user.user.id" class="btn btn-outline-primary" @click="toggleFollow">
+      <button v-if="feed.author.id !== $store.state.user.feeduser.id" class="btn btn-outline-primary" @click="toggleFollow">
         {{ isFollowing ? 'Following' : 'Follow' }}
       </button>
     </div>
@@ -47,14 +47,14 @@ export default {
     };
   },
   created() {
-    this.isLiked = this.feed.liked_by.includes(this.$store.state.user.user.id);
-    this.isFollowing = this.$store.state.user.user.following.includes(this.feed.author.username);
+    this.isLiked = this.feed.liked_by.includes(this.$store.state.user.feeduser.id);
+    this.isFollowing = this.$store.state.user.feeduser.following.includes(this.feed.author.username);
   },
   methods: {
     toggleLike() {
       const payload = {
         postId: this.feed.id,
-        userId: this.$store.state.user.user.id
+        userId: this.$store.state.user.feeduser.id
       };
       if (this.isLiked) {
         this.feed.likes--;
@@ -70,7 +70,7 @@ export default {
     toggleFollow() {
       const payload ={
         authorId : this.feed.author.id,
-        userId : this.$store.state.user.user.id
+        userId : this.$store.state.user.feeduser.id
       };
       if (this.isFollowing) {
         console.log('before dispatch unfollowUser', payload)

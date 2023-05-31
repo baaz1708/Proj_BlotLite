@@ -59,8 +59,8 @@ class UpdateAccountForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    user_id = StringField('User ID', validators=[DataRequired()])
-    curr_user = TextAreaField('Current User', validators=[DataRequired()])
+    user_id = StringField('User ID', validators=[])
+    curr_user = TextAreaField('Current User', validators=[])
     feed_image = FileField('Feed Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     submit = SubmitField('Post')
 

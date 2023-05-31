@@ -2,6 +2,7 @@ import EventService from "../../services/EventService";
 
 export const namespaced = true;
 export const state = {
+  feeduser: JSON.parse(localStorage.getItem('user')) || {},
   user: JSON.parse(localStorage.getItem('user')) || {},
   profileinfo: JSON.parse(localStorage.getItem('user')) || {}
 }
@@ -11,6 +12,7 @@ export const mutations = {
     state.user = user
   },
   UPDATE_USER(state) {
+    state.feeduser = JSON.parse(localStorage.getItem('user')) || {}
     state.user = JSON.parse(localStorage.getItem('user')) || {}
     state.profileinfo= JSON.parse(localStorage.getItem('user')) || {}
   }

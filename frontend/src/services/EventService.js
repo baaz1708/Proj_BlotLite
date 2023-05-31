@@ -49,6 +49,20 @@ export default {
   unlikePost(payload) {
     return apiClient.put('/unlike_post/' , payload)
   },
+  deletePost(postid) {
+    return apiClient.delete('/delete_post/' + postid)
+  },
+  updatePost(post) {
+    const formData = new FormData();
+    formData.append('title', post.title);
+    formData.append('description', post.description);
+    formData.append('feed_image', post.feed_image);
+    return apiClient.put('/update_post/' + post.id, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
   followUser(payload) {
     return apiClient.put('/follow_user/' , payload)
   },

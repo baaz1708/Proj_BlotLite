@@ -37,7 +37,18 @@
         <div class="d-flex flex-wrap">
           <div v-for="(post, index) in userdata.user_posts" :key="index" class="m-1">
             <!-- Replace with your post component -->
-            <img :src="post.feed_image" alt="" style="width: 200px; height: 200px; object-fit: cover;">
+            <div style="position: relative;">
+              <img :src="post.feed_image" alt="" style="width: 200px; height: 200px; object-fit: cover;">
+              <div class="dropdown" style="position: absolute; top: 0; right: 0;">
+                <a class="btn btn-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa-solid fa-ellipsis-vertical"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" @click="editPost(post)">Edit</a></li>
+                  <li><a class="dropdown-item" href="#" @click="deletePost(post.id)">Delete</a></li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -52,8 +63,8 @@ export default {
     return {
       userdata: this.$route.params.user,
       id: this.$route.params.user.user.id,
-      followers: 123,
-      following: 456,
+      followers: this.$route.params.user.user.followers.length,
+      following: this.$route.params.user.user.following.length,
       editMode: false,
       newUsername: this.$route.params.user.user.username,
       newEmail: this.$route.params.user.user.email,
@@ -90,6 +101,17 @@ export default {
                     this.errors.push('Something went wrong. Please try again later.');
                 }
             })
+    },
+    editPost(postdata) {
+      console.log(' before Edit post with id', postdata.id);
+      this.$router.push({ name: 'post-update', params: { post: postdata, id: postdata.id } })
+    },
+    deletePost(id) {
+      console.log(' befor Delete post with id', id);
+      this.$store.dispatch('post/deletePost', id).then(() => {
+        const index = this.userdata.user_posts.findIndex((post) => post.id === id);
+        this.userdata.user_posts.splice(index, 1);
+      })
     }
   }
 }
@@ -119,5 +141,9 @@ export default {
 
 .profile-image-container:hover .profile-image-overlay {
   opacity: 1;
+}
+.btn-light {
+    background-color: transparent;
+    border-color: transparent;
 }
 </style>

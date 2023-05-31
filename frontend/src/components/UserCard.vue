@@ -14,7 +14,7 @@
             <small>{{ user.email }}</small>
         </div>
         <p class="mb-1">Some content</p>
-        <small class="badge rounded-pill text-bg-secondary">{{ user.id }} followers</small>
+        <small class="badge rounded-pill text-bg-secondary">{{ user.followers.length }} followers</small>
       </li>
     </ul>
   </div>

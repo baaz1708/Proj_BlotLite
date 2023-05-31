@@ -137,6 +137,53 @@ def post(post_id):
     post=Post.query.get_or_404(post_id)
     return jsonify(post.to_dict())
 
+@app.route('/like_post/', methods=['PUT'])
+def like_post():
+    payload=request.get_json()
+    post_id=payload['postId']
+    user_id=payload['userId']
+    post = Post.query.get_or_404(post_id)
+    user = User.query.get_or_404(user_id)
+    post.likes += 1
+    user.liked_posts.append(post)
+    db.session.commit()
+    return jsonify(post.to_dict())
+
+@app.route('/unlike_post/', methods=['PUT'])
+def unlike_post():
+    payload=request.get_json()
+    post_id=payload['postId']
+    user_id=payload['userId']
+    post = Post.query.get_or_404(post_id)
+    user = User.query.get_or_404(user_id)
+    post.likes -= 1
+    user.liked_posts.remove(post)
+    db.session.commit()
+    return jsonify(post.to_dict())
+
+@app.route("/follow_user/", methods=['PUT'])
+def follow_user():
+    payload=request.get_json()
+    user_id=payload['userId']
+    followed_id=payload['authorId']
+    user = User.query.get_or_404(user_id)
+    followed = User.query.get_or_404(followed_id)
+    user.following.append(followed)
+    db.session.commit()
+    return jsonify(user.to_dict())
+
+@app.route("/unfollow_user/", methods=['PUT'])
+def unfollow_user():
+    payload=request.get_json()
+    user_id=payload['userId']
+    unfollowed_id=payload['authorId']
+    user = User.query.get_or_404(user_id)
+    unfollowed=User.query.get_or_404(unfollowed_id)
+    user.following.remove(unfollowed)
+    db.session.commit()
+    return jsonify(user.to_dict())
+
+
 @app.route("/post/<int:post_id>/update", methods=['GET','POST'])
 @login_required
 def update_post(post_id):
@@ -154,6 +201,7 @@ def update_post(post_id):
         form.title.data=post.title
         form.content.data=post.content
     return render_template('create_post.html',title='Update Post',form=form,legend='Update Post')
+
 
 @app.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required

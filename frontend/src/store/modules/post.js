@@ -21,5 +21,23 @@ export const actions = {
                 commit('POST_DATA', data)
             }
         })
+    },
+    likePost({ commit }, payload) {
+        return EventService.likePost(payload).then((response) => {
+            const data = response.data;
+            console.log("after like post",data);
+            if (response.status >= 200 && response.status < 400) {
+                commit('POST_DATA', data)
+            }
+        })
+    },
+    unlikePost({ commit }, payload) {
+        return EventService.unlikePost(payload).then((response) => {
+            const data = response.data;
+            console.log("after unlike post",data);
+            if (response.status >= 200 && response.status < 400) {
+                commit('POST_DATA', data)
+            }
+        })
     }
 }

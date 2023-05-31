@@ -1,7 +1,7 @@
 <template>
 <router-link
     class="profile-link"
-    :to="{ name: 'user-profile', params: { id: user.id } }"
+    :to="{ name: 'profile', params: { id: user.id } }"
   >
   <div class="mb-3">
     <ul class="list-group user-card">

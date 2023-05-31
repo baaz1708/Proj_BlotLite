@@ -43,6 +43,18 @@ export default {
       }
     });
   },
+  likePost(payload) {
+    return apiClient.put('/like_post/' , payload)
+  },
+  unlikePost(payload) {
+    return apiClient.put('/unlike_post/' , payload)
+  },
+  followUser(payload) {
+    return apiClient.put('/follow_user/' , payload)
+  },
+  unfollowUser(payload) {
+    return apiClient.put('/unfollow_user/' , payload)
+  },
   postRegistration(registration) {
     return apiClient.post('/register', registration)
   },

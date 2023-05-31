@@ -37,6 +37,28 @@ export const actions = {
       }
 
     })
+  },
+  followUser({ commit}, payload) {
+    return EventService.followUser(payload).then((response) =>{
+      const data = response.data;
+      console.log("after followUser put",data);
+      if(response.status >= 200 && response.status < 400){
+        localStorage.setItem('user', JSON.stringify(data))
+        commit('UPDATE_USER')
+      }
+
+    })
+  },
+  unfollowUser({ commit}, payload) {
+    return EventService.unfollowUser(payload).then((response) =>{
+      const data = response.data;
+      console.log("after unfollowUser put",data);
+      if(response.status >= 200 && response.status < 400){
+        localStorage.setItem('user', JSON.stringify(data))
+        commit('UPDATE_USER')
+      }
+
+    })
   }
 }
 

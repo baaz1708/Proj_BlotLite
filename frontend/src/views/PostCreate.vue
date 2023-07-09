@@ -2,27 +2,27 @@
   <div class="container pt-3">
     <h1 class="text-center m-4">Create new Post</h1>
 
-    <form @submit.prevent="createEvent">
+    <form @submit.prevent="createPost">
 
       <h3>Name describe your Post</h3>
       <div class="field">
         <label>Title</label>
-        <input  type="text" v-model="event.title" placeholder="Add an event title" @blur="$v.event.title.$touch()" class="form-control { error: $v.event.title.$error }"/>
+        <input  type="text" v-model="post.title" placeholder="Add an post title" @blur="$v.post.title.$touch()" class="form-control { error: $v.post.title.$error }"/>
       </div>
 
-      <template v-if="$v.event.title.$error">
-        <p v-if="!$v.event.title.required" class="errorMessage">
+      <template v-if="$v.post.title.$error">
+        <p v-if="!$v.post.title.required" class="errorMessage">
           Title is required.
         </p>
       </template>
 
       <div class="field">
         <label>Description</label>
-        <input  type="text" v-model="event.description" placeholder="Add an event description" @blur="$v.event.description.$touch()" class="form-control { error: $v.event.description.$error }" />
+        <input  type="text" v-model="post.description" placeholder="Add an post description" @blur="$v.post.description.$touch()" class="form-control { error: $v.post.description.$error }" />
       </div>
 
-      <template v-if="$v.event.description.$error">
-        <p v-if="!$v.event.description.required" class="errorMessage">
+      <template v-if="$v.post.description.$error">
+        <p v-if="!$v.post.description.required" class="errorMessage">
           Description is required.
         </p>
       </template>
@@ -55,65 +55,52 @@ export default {
   },
   data() {
     return {
-      event: this.createFreshEvent(),
+      post: this.createFreshPost(),
     }
   },
   validations: {
-    event: {
+    post: {
       title: { required },
       description: { required },
     }
   },
   methods: {
-    createEvent() {
+    createPost() {
       this.$v.$touch()
       if (!this.$v.$invalid) {
         NProgress.start()
-        this.event.timestamp = new Date().toISOString()
-        // from datetime import datetime
-        // @app.route('/create-event', methods=['POST'])
-        // def create_event():
-        //     data = request.get_json()
-        //     datetime_str = data['datetime']
-        //     datetime_obj = datetime.fromisoformat(datetime_str)
-
+        console.log("before dispatch", this.post)
         this.$store
-          .dispatch('event/createEvent', this.event)
+          .dispatch('post/new_post', this.post)
           .then(() => {
             this.$router.push({
-              name: 'event-show',
-              params: { id: this.event.id }
+              name: 'feed-list',
+              // params: { id: this.post.id }
             })
-            this.event = this.createFreshEvent()
+            this.post = this.createFreshPost()
           })
           .catch(() => {
             NProgress.done()
           })
       }
     },
-    createFreshEvent() {
-      const user = this.$store.state.user.user
-      const id = Math.floor(Math.random() * 10000000)
+    createFreshPost() {
+      const user = JSON.parse(localStorage.getItem('user')) || {}
       return {
-        id,
         user: user,
         title: '',
         description: '',
-        selected_file: null,
-        timestamp: '',
+        feed_image: '',
       }
     },
     onFileChange(e) {
       console.log(e.target.files[0])
-      this.event.selected_file = e.target.files[0];
+      this.post.feed_image = e.target.files[0];
     }
   },
   watch: {
-  'event.selected_file': function (newVal, oldVal) {
-    console.log('selected_file changed from', oldVal, 'to', newVal);
-  },
-  'event.timestamp': function (newVal, oldVal) {
-    console.log('timestamp changed from', oldVal, 'to', newVal);
+  'post.feed_image': function (newVal, oldVal) {
+    console.log('feed_image changed from', oldVal, 'to', newVal);
   }
 }
 }

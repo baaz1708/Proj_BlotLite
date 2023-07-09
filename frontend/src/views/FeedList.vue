@@ -1,10 +1,9 @@
 <template>
   <div class="container p-2">
-    <h1 class="m-4 text-center">Events for {{ user.user.name }}</h1>
-    <EventCard v-for="event in event.events" :key="event.id" :event="event" />
+    <FeedCard v-for="feed in feed.feeds" :key="feed.id" :feed="feed" class="large-margin" />
     <template v-if="page != 1">
       <router-link
-        :to="{ name: 'event-list', query: { page: page - 1 } }"
+        :to="{ name: 'feed-list', query: { page: page - 1 } }"
         rel="prev">
         Prev Page
       </router-link>   
@@ -16,7 +15,7 @@
     </template>
     <router-link
       v-if="hasNextPage"
-      :to="{ name: 'event-list', query: { page: page + 1 } }"
+      :to="{ name: 'feed-list', query: { page: page + 1 } }"
       rel="next">
       Next Page
     </router-link>
@@ -24,14 +23,14 @@
 </template>
 
 <script>
-import EventCard from '@/components/EventCard.vue'
+import FeedCard from '@/components/FeedCard.vue'
 import { mapState } from 'vuex'
 import store from '@/store/store'
 
-function getPageEvents(routeTo, next) {
+function getPageFeeds(routeTo, next) {
   const currentPage = parseInt(routeTo.query.page) || 1
   store
-    .dispatch('event/fetchEvents', {
+    .dispatch('feed/fetchFeeds', {
       page: currentPage
     })
     .then(() => {
@@ -42,7 +41,7 @@ function getPageEvents(routeTo, next) {
 
 export default {
   components: {
-    EventCard
+    FeedCard
   },
   props: {
     page: {
@@ -51,16 +50,16 @@ export default {
     }
   },
   beforeRouteEnter(routeTo, routeFrom, next) {
-    getPageEvents(routeTo, next)
+    getPageFeeds(routeTo, next)
   },
   beforeRouteUpdate(routeTo, routeFrom, next) {
-    getPageEvents(routeTo, next)
+    getPageFeeds(routeTo, next)
   },
   computed: {
     hasNextPage() {
-      return this.event.eventsTotal > this.page * this.event.perPage
+      return this.feed.feedsTotal > this.page * this.feed.perPage
     },
-    ...mapState(['event', 'eventsTotal', 'user'])
+    ...mapState(['feed','user'])
   }
 }
 </script>
@@ -71,5 +70,10 @@ a {
   color: #1dc77d;
   font-weight: 600;
   background-color: transparent;
+}
+
+.large-margin {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 </style>

@@ -3,20 +3,20 @@ import EventService from '@/services/EventService.js'
 export const namespaced = true
 
 export const state = {
-  events: [],
-  eventsTotal: 0,
+  feeds: [],
+  feedsTotal: 0,
   event: {},
   perPage: 3
 }
 export const mutations = {
   ADD_EVENT(state, event) {
-    state.events.push(event)
+    state.feeds.push(event)
   },
-  SET_EVENTS(state, events) {
-    state.events = events
+  SET_FEEDS(state, feeds) {
+    state.feeds = feeds
   },
-  SET_EVENTS_TOTAL(state, eventsTotal) {
-    state.eventsTotal = eventsTotal
+  SET_FEEDS_TOTAL(state, feedsTotal) {
+    state.feedsTotal = feedsTotal
   },
   SET_EVENT(state, event) {
     state.event = event
@@ -48,17 +48,18 @@ export const actions = {
         throw error
       })
   },
-  fetchEvents({ commit, dispatch, state }, { page }) {
-    return EventService.getEvents(state.perPage, page)
+  fetchFeeds({ commit, dispatch, state }, { page }) {
+    console.log('before fetch feeds', page)
+    return EventService.getFeeds(state.perPage, page)
       .then(response => {
-        console.log('data', response.data)
-        commit('SET_EVENTS_TOTAL', parseInt(response.headers['x-total-count']))
-        commit('SET_EVENTS', response.data)
+        console.log('after fetch feeds', response.data)
+        commit('SET_FEEDS_TOTAL', parseInt(response.headers['x-total-count']))
+        commit('SET_FEEDS', response.data)
       })
       .catch(error => {
         const notification = {
           type: 'error',
-          message: 'There was a problem fetching events: ' + error.message
+          message: 'There was a problem fetching feeds: ' + error.message
         }
         dispatch('notification/add', notification, { root: true })
       })
@@ -79,6 +80,6 @@ export const actions = {
 }
 export const getters = {
   getEventById: state => id => {
-    return state.events.find(event => event.id === id)
+    return state.feeds.find(event => event.id === id)
   }
 }

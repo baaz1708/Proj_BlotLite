@@ -1,4 +1,3 @@
-import axios from "axios";
 import EventService from "../../services/EventService";
 
 export const namespaced = true;
@@ -21,13 +20,15 @@ export const mutations = {
 
 export const actions = {
     login ({ commit }, credentials) {
+        console.log("before post login",credentials)
         return EventService.postLogin(credentials).then((response) =>{
             const data = response.data;
-            console.log(data);
-            commit('LOGIN_DATA', data)}
-                // return data
-            // }
-        )
+            console.log("after post login",data);
+            if(response.status == 200){
+                commit('LOGIN_DATA', data)
+                commit('user/UPDATE_USER', null, { root: true })
+            }
+        })
     },
     logout ({ commit }) {
         commit('CLEAR_USER_DATA')

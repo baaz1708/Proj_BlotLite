@@ -7,11 +7,14 @@ import camelCase from 'lodash/camelCase'
 import 'nprogress/nprogress.css'
 import Vuelidate from 'vuelidate'
 import DateFilter from './filters/date'
+import TimeFilter from './filters/time'
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.css'
 import axios from 'axios'
 
 Vue.filter('date', DateFilter)
+Vue.filter('time', TimeFilter)
 
 Vue.use(Vuelidate)
 

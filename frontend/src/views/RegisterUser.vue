@@ -75,7 +75,7 @@ export default {
             email: '',
             password: '',
             confirm_password: '',
-            errors: null
+            errors: []
         }
     },
     validations:{
@@ -97,7 +97,12 @@ export default {
             }).then(() => {
                 this.$router.push({ name: 'login' })
             }).catch((err) => {
-                this.errors = err.response.data.errors
+                console.log(err)
+                if (err.response && err.response.data && err.response.data.message){
+                    this.errors.push(err.response.data.message);
+                } else {
+                    this.errors.push('Something went wrong. Please try again later.');
+                }
             })
         }
     }

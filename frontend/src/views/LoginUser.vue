@@ -58,9 +58,18 @@ export default {
                 email: this.email,
                 password: this.password
             }).then(() => {
-                this.$router.push({ name: 'event-list' })
+                if (this.$store.state.errorMessage) {
+                    this.error = this.$store.state.errorMessage
+                } else {
+                    this.$router.push({ name: 'feed-list' })
+                }
             }).catch((err) => {
-                this.error = err.response.data.error
+                console.log(err)
+                if (err.response && err.response.data && err.response.data.message){
+                    this.error = err.response.data.message
+                } else {
+                    this.error = 'An error occured. Please try again.'
+                }
             })
         }
     }

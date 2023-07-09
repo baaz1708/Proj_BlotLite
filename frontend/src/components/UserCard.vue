@@ -1,7 +1,7 @@
 <template>
 <router-link
     class="profile-link"
-    :to="{ name: 'user-profile', params: { id: user.id } }"
+    :to="{ name: 'other-profile', params: { id: user.id}, query: {userdata: JSON.stringify(user)} }"
   >
   <div class="mb-3">
     <ul class="list-group user-card">
@@ -14,7 +14,7 @@
             <small>{{ user.email }}</small>
         </div>
         <p class="mb-1">Some content</p>
-        <small class="badge rounded-pill text-bg-secondary">{{ user.id }} followers</small>
+        <small class="badge rounded-pill text-bg-secondary">{{ user.followers.length }} followers</small>
       </li>
     </ul>
   </div>

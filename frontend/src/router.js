@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import EventCreate from './views/EventCreate.vue'
-import EventList from './views/EventList.vue'
-import EventShow from './views/EventShow.vue'
+import PostCreate from './views/PostCreate.vue'
+import UpdatePost from './views/UpdatePost.vue'
+import FeedList from './views/FeedList.vue'
+import MyProfile from './views/MyProfile.vue'
+import OtherProfile from './views/OtherProfile.vue'
 import NProgress from 'nprogress'
 import store from '@/store/store'
 import NotFound from './views/NotFound.vue'
@@ -11,6 +13,7 @@ import SearchUser from './views/SearchUser.vue'
 import RegisterUser from './views/RegisterUser.vue'
 import LoginUser from './views/LoginUser.vue'
 import Home from './views/Home.vue'
+import Follow_ersORing from './views/Follow_ersORing.vue'
 
 Vue.use(Router)
 
@@ -29,16 +32,16 @@ const router = new Router({
           next();
         }
         if (store.getters['login_user/loggedIn']) {
-          next({ name: 'event-list' })
+          next({ name: 'feed-list' })
         } else {
           next()
         }
       }
     },
     {
-      path: '/events',
-      name: 'event-list',
-      component: EventList,
+      path: '/feeds',
+      name: 'feed-list',
+      component: FeedList,
       meta: { requiresAuth: true },
       props: true
     },
@@ -46,6 +49,12 @@ const router = new Router({
       path: '/search',
       name: 'search-user',
       component: SearchUser,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/follow_ersORing/:id',
+      name: 'follow_ersORing',
+      component: Follow_ersORing,
       meta: { requiresAuth: true },
     },
     {
@@ -59,20 +68,22 @@ const router = new Router({
       component: LoginUser
     },
     {
-      path: '/event/:id',
-      name: 'event-show',
-      component: EventShow,
-      props: true,
+      path: '/profile',
+      name: 'profile',
+      component: MyProfile,
+      meta: { requiresAuth: true },
       beforeEnter(routeTo, routeFrom, next) {
         store
-          .dispatch('event/fetchEvent', routeTo.params.id)
-          .then(event => {
-            routeTo.params.event = event
+          .dispatch('user/setUser')
+          .then(() => {
+            const userdata = store.state.user.user
+            console.log('userdata:(before routeTo params profile)', userdata)
+            routeTo.params.user = userdata
             next()
           })
           .catch(error => {
             if (error.response && error.response.status === 404) {
-              next({ name: '404', params: { resource: 'event' } })
+              next({ name: '404', params: { resource: '' } })
             } else {
               next({ name: 'network-issue' })
             }
@@ -80,9 +91,22 @@ const router = new Router({
       }
     },
     {
-      path: '/event/create',
-      name: 'event-create',
-      component: EventCreate
+      path: '/other_profile/:id',
+      name: 'other-profile',
+      component: OtherProfile,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/post/create',
+      name: 'post-create',
+      component: PostCreate,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/post_update/:id',
+      name: 'post-update',
+      component: UpdatePost,
+      meta: { requiresAuth: true },
     },
     {
       path: '/404',

@@ -77,5 +77,8 @@ export default {
   },
   getUsers() {
     return apiClient.get('/user_list')
+  },
+  getUserPosts(id) {
+    return apiClient.get('/user_posts/' + id)
   }
 }

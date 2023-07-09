@@ -2,6 +2,7 @@ import EventService from "../../services/EventService";
 
 export const namespaced = true;
 export const state = {
+  user_posts: [],
   feeduser: JSON.parse(localStorage.getItem('user')) || {},
   user: JSON.parse(localStorage.getItem('user')) || {},
   profileinfo: JSON.parse(localStorage.getItem('user')) || {}
@@ -10,6 +11,9 @@ export const state = {
 export const mutations = {
   SET_USER(state, user) {
     state.user = user
+  },
+  SET_USER_POSTS(state, userposts) {
+    state.user_posts = userposts
   },
   UPDATE_USER(state) {
     state.feeduser = JSON.parse(localStorage.getItem('user')) || {}
@@ -60,6 +64,16 @@ export const actions = {
         commit('UPDATE_USER')
       }
 
+    })
+  },
+  fetchUserPosts({ commit, state }, id) {
+    console.log("before fetchUserPosts",id)
+    return EventService.getUserPosts(id).then((response) =>{
+      const data = response.data;
+      console.log("after fetchUserPosts",data);
+      if(response.status >= 200 && response.status < 400){
+        commit('SET_USER_POSTS', data)
+      }
     })
   }
 }

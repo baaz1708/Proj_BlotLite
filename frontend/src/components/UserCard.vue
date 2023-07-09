@@ -1,7 +1,7 @@
 <template>
 <router-link
     class="profile-link"
-    :to="{ name: 'profile', params: { id: user.id } }"
+    :to="{ name: 'other-profile', params: { id: user.id}, query: {userdata: JSON.stringify(user)} }"
   >
   <div class="mb-3">
     <ul class="list-group user-card">

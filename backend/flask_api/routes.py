@@ -99,6 +99,13 @@ def user_account(user_id):
         .order_by(Post.timestamp.desc())
         return jsonify({'user':user.to_dict(), 'user_posts':[post.to_dict() for post in posts]})
 
+@app.route("/user_posts/<int:user_id>", methods=['GET'])
+def user_posts(user_id):
+    user=User.query.filter_by(id=user_id).first_or_404()
+    posts=Post.query.filter_by(author=user)\
+    .order_by(Post.timestamp.desc())
+    return jsonify([post.to_dict() for post in posts])
+
 def save_feed_picture(form_picture):
     random_hex=secrets.token_hex(8)
     _,f_ext=os.path.splitext(form_picture.filename)

@@ -4,6 +4,7 @@ import PostCreate from './views/PostCreate.vue'
 import UpdatePost from './views/UpdatePost.vue'
 import FeedList from './views/FeedList.vue'
 import MyProfile from './views/MyProfile.vue'
+import OtherProfile from './views/OtherProfile.vue'
 import NProgress from 'nprogress'
 import store from '@/store/store'
 import NotFound from './views/NotFound.vue'
@@ -12,6 +13,7 @@ import SearchUser from './views/SearchUser.vue'
 import RegisterUser from './views/RegisterUser.vue'
 import LoginUser from './views/LoginUser.vue'
 import Home from './views/Home.vue'
+import Follow_ersORing from './views/Follow_ersORing.vue'
 
 Vue.use(Router)
 
@@ -50,6 +52,12 @@ const router = new Router({
       meta: { requiresAuth: true },
     },
     {
+      path: '/follow_ersORing/:id',
+      name: 'follow_ersORing',
+      component: Follow_ersORing,
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/register',
       name: 'register',
       component: RegisterUser
@@ -81,6 +89,12 @@ const router = new Router({
             }
           })
       }
+    },
+    {
+      path: '/other_profile/:id',
+      name: 'other-profile',
+      component: OtherProfile,
+      meta: { requiresAuth: true },
     },
     {
       path: '/post/create',

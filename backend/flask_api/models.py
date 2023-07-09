@@ -64,7 +64,8 @@ class User(db.Model, UserMixin):
             'image_file': url_for('static', filename='profile_pics/' + self.image_file, _external=True),
             'password': self.password,
             'followers': [follower.username for follower in self.followers],
-            'following': [followed.username for followed in self.following]
+            'following': [followed.username for followed in self.following],
+            'posts': [post.to_dict() for post in self.posts],
         }
 
     def __repr__(self):

@@ -17,7 +17,7 @@ export const actions = {
     fetchUsers({ commit, dispatch }) {
         return EventService.getUsers()
             .then(response => {
-                console.log('response is: ', response)
+                console.log('response after fetching user list is: ', response)
                 commit('SET_USERS', response.data)
             })
             .catch(error => {

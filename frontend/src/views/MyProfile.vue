@@ -25,8 +25,8 @@
         </div>
         <div class="d-flex justify-content-between p-3">
           <p><strong>Posts:</strong> {{ userdata.user_posts.length }}</p>
-          <p class="mr-3"><strong>Followers:</strong> {{ followers }}</p>
-          <p class="ml-4"><strong>Following:</strong> {{ following }}</p>
+          <p class="mr-3"><strong>Followers:</strong><a class="clickable" @click="goToFollowers"> {{ followers }}</a></p>
+          <p class="ml-4"><strong>Following:</strong><a class="clickable" @click="goToFollowing"> {{ following }}</a></p>
         </div>
       </div>
     </div>
@@ -112,6 +112,12 @@ export default {
         const index = this.userdata.user_posts.findIndex((post) => post.id === id);
         this.userdata.user_posts.splice(index, 1);
       })
+    },
+    goToFollowers() {
+      this.$router.push({ name: 'follow_ersORing', params: { id: this.id, follow__: 'followers' }})
+    },
+    goToFollowing() {
+            this.$router.push({ name: 'follow_ersORing', params: { id: this.id, follow__: 'following' }})
     }
   }
 }
@@ -145,5 +151,10 @@ export default {
 .btn-light {
     background-color: transparent;
     border-color: transparent;
+}
+.clickable {
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
 }
 </style>

@@ -3,27 +3,45 @@ import secrets
 from PIL import Image
 from flask import abort, render_template,url_for,flash,redirect,request
 from flask_login import login_user,current_user,logout_user,login_required
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_api import app,bcrypt,db,mail
 from flask_api.forms import RegistrationForm,LoginForm,UpdateAccountForm,PostForm,RequestResetForm,ResetPasswordForm
 from flask_api.models import User,Post
 from flask_mail import Message
+import jwt,datetime
 from flask import jsonify
 from werkzeug.datastructures import ImmutableMultiDict
+from functools import wraps
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        token = None
+        if 'Authorization' in request.headers:
+            token =  request.headers['Authorization'].split(' ')[1]
+            print('came from authorization header',token)
+        if not token:
+            return jsonify({'message':'Token is missing!'}), 401
+        try:
+            data = jwt.decode(token,app.config['SECRET_KEY'],algorithms=['HS256'])
+            print(data)
+            token_user=User.query.filter_by(id=data['user_id']).first()
+            print(token_user)
+        except Exception as e:
+            print(e)
+            return jsonify({'message': 'Token is invalid!'}), 401
+        return f(token_user,*args, **kwargs)
+    return decorated
+
 
 @app.route("/")
 @app.route("/feeds")
-def home():
-    perPage = request.args.get('perPage', type=int)
+@token_required
+def home(token_user):
+    perPage = request.args.get('limit', type=int)
     page = request.args.get('page', type=int)
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=perPage).items
     response_data = [post.to_dict() for post in posts]
     return jsonify(response_data)
-
-@app.route("/about")
-def about():
-    return jsonify({'about':'This is a blog site'})
-
 
 @app.route("/register", methods=['POST'])
 def register():
@@ -49,9 +67,11 @@ def login():
     if form.validate():
         user=User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
-            # access_token = create_access_token(identity=user.id)
+            exp_time = datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+            payload = {'user_id': user.id, 'exp':exp_time}
+            token= jwt.encode(payload,app.config['SECRET_KEY'],algorithm='HS256')
             login_user(user,remember=form.remember.data)
-            return jsonify(current_user.to_dict()), 200
+            return jsonify({'userdata':current_user.to_dict(), 'token': token}), 200
         else:
             return jsonify({'message':'Login Unsuccessful. Please check email and password'}), 401
     else:
@@ -73,7 +93,8 @@ def save_profile_picture(form_picture):
     return picture_fn
 
 @app.route("/user/<int:user_id>", methods=['GET','POST','PUT'])
-def user_account(user_id):
+@token_required
+def user_account(token_user,user_id):
     if request.method=='PUT':
         form=UpdateAccountForm(meta={'csrf': False})
         form.username.data = request.form['username']
@@ -120,7 +141,8 @@ def save_feed_picture(form_picture):
     return picture_fn
 
 @app.route("/post/new", methods=['POST'])
-def new_post():
+@token_required
+def new_post(token_user):
     form=PostForm(meta={'csrf': False})
     form.curr_user.data = request.form['curr_user']
     form.user_id.data = request.form['user_id']
@@ -192,7 +214,8 @@ def unfollow_user():
 
 
 @app.route("/update_post/<int:post_id>", methods=['GET','POST','PUT'])
-def update_post(post_id):
+@token_required
+def update_post(token_user,post_id):
     post=Post.query.get_or_404(post_id)
     form=PostForm(meta={'csrf': False})
     form.title.data = request.form['title']
@@ -217,7 +240,8 @@ def update_post(post_id):
             
 
 @app.route("/delete_post/<int:post_id>", methods=['DELETE'])
-def delete_post(post_id):
+@token_required
+def delete_post(token_user,post_id):
     post=Post.query.get_or_404(post_id)
     # if post.author != current_user:
     #     abort(403)
@@ -236,7 +260,8 @@ If you did not make this request then simply ignore this email and no changes wi
     mail.send(msg)
 
 @app.route("/user_list", methods=['GET'])
-def user_list():
+@token_required
+def user_list(token_user):
     users=User.query.all()
     response_data= [user.to_dict() for user in users]
     return jsonify(response_data)

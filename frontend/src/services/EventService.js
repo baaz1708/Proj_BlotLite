@@ -11,6 +11,10 @@ const apiClient = axios.create({
 })
 
 export default {
+  addtoken(token){
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    console.log('apiclient header token added',apiClient.defaults.headers.common['Authorization'])
+  },
   getFeeds(perPage, page) {
     return apiClient.get('/feeds?_limit=' + perPage + '&_page=' + page)
   },

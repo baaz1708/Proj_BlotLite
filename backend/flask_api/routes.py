@@ -87,6 +87,8 @@ def login():
             payload = {'user_id': user.id, 'exp':exp_time}
             token= jwt.encode(payload,app.config['SECRET_KEY'],algorithm='HS256')
             login_user(user,remember=form.remember.data)
+            print(current_user.is_authenticated)
+            print(current_user.username)
             return jsonify({'userdata':current_user.to_dict(), 'token': token}), 200
         else:
             return jsonify({'message':'Login Unsuccessful. Please check email and password'}), 401
@@ -112,7 +114,7 @@ def save_profile_picture(form_picture):
 @token_required
 def user_account(token_user,user_id):
     if request.method=='PUT':
-        form=UpdateAccountForm(meta={'csrf': False})
+        form=UpdateAccountForm(user=token_user, meta={'csrf': False})
         form.username.data = request.form['username']
         form.email.data = request.form['email']
         if 'picture' in request.files:

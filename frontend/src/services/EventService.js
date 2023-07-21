@@ -26,7 +26,7 @@ export default {
     formData.append('username', user.username);
     formData.append('email', user.email);
     formData.append('picture', user.image_file);
-    console.log("formData", formData)
+    console.log("formData",formData)
     return apiClient.put('/user/' + user.id, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'

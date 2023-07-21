@@ -116,11 +116,16 @@ export default {
     },
     async exportPost(postdata) {
       const imageUrl = postdata.feed_image;
+      console.log("imageUrl=",imageUrl)
       const response = await fetch(imageUrl);
+      console.log("response=",response)
       const blob = await response.blob();
+      console.log("blob=",blob)
       const objectUrl = URL.createObjectURL(blob);
+      console.log("objectUrl=",objectUrl)
       const downloadAnchorNode = document.createElement('a');
       downloadAnchorNode.setAttribute('href', objectUrl);
+      downloadAnchorNode.setAttribute('target', '_blank');
       downloadAnchorNode.setAttribute("download", "post-" + postdata.id + ".jpeg");
 
       document.body.appendChild(downloadAnchorNode);

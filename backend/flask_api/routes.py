@@ -4,6 +4,7 @@ from PIL import Image
 from flask import abort, render_template,url_for,flash,redirect,request
 from flask_login import login_user,current_user,logout_user,login_required
 from flask_api import app,bcrypt,db,mail
+from flask_api import tasks
 from flask_api.forms import RegistrationForm,LoginForm,UpdateAccountForm,PostForm,RequestResetForm,ResetPasswordForm
 from flask_api.models import User,Post
 from flask_mail import Message
@@ -32,6 +33,21 @@ def token_required(f):
         return f(token_user,*args, **kwargs)
     return decorated
 
+@app.route("/celery_hello/<username>",methods=['GET','POST'])
+def celery_hello(username):
+    job = tasks.just_say_hello.delay(username)
+    result = job.wait()
+    return str(result), 200
+
+@app.route("/celery_time", methods=["GET","POST"])
+def celery_time():
+    now = datetime.datetime.now()
+    print("now in flask=", now)
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    print("date and time =",dt_string)
+    job = tasks.print_current_time_job.apply_async(countdown=5)
+    result=job.wait()
+    return str(result),200
 
 @app.route("/")
 @app.route("/feeds")

@@ -46,6 +46,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#" @click="editPost(post)">Edit</a></li>
                   <li><a class="dropdown-item" href="#" @click="deletePost(post.id)">Delete</a></li>
+                  <li><a class="dropdown-item" href="#" @click="exportPost(post)">Download</a></li>
                 </ul>
               </div>
             </div>
@@ -112,6 +113,24 @@ export default {
         const index = this.userdata.user_posts.findIndex((post) => post.id === id);
         this.userdata.user_posts.splice(index, 1);
       })
+    },
+    async exportPost(postdata) {
+      const imageUrl = postdata.feed_image;
+      console.log("imageUrl=",imageUrl)
+      const response = await fetch(imageUrl);
+      console.log("response=",response)
+      const blob = await response.blob();
+      console.log("blob=",blob)
+      const objectUrl = URL.createObjectURL(blob);
+      console.log("objectUrl=",objectUrl)
+      const downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute('href', objectUrl);
+      downloadAnchorNode.setAttribute('target', '_blank');
+      downloadAnchorNode.setAttribute("download", "post-" + postdata.id + ".jpeg");
+
+      document.body.appendChild(downloadAnchorNode);
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
     },
     goToFollowers() {
       this.$router.push({ name: 'follow_ersORing', params: { id: this.id, follow__: 'followers' }})

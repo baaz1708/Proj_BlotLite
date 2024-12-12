@@ -8,8 +8,9 @@ export const state = {
 
 export const mutations = {
     LOGIN_DATA (state, userData) {
-        state.user = userData
-        localStorage.setItem('user', JSON.stringify(userData))
+        state.user = userData.userdata
+        localStorage.setItem('user', JSON.stringify(userData.userdata))
+        EventService.addtoken(userData.token)
         //axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`
     },
     CLEAR_USER_DATA () {

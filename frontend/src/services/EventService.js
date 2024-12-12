@@ -11,6 +11,10 @@ const apiClient = axios.create({
 })
 
 export default {
+  addtoken(token){
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    console.log('apiclient header token added',apiClient.defaults.headers.common['Authorization'])
+  },
   getFeeds(perPage, page) {
     return apiClient.get('/feeds?_limit=' + perPage + '&_page=' + page)
   },
@@ -22,7 +26,7 @@ export default {
     formData.append('username', user.username);
     formData.append('email', user.email);
     formData.append('picture', user.image_file);
-    console.log("formData", formData)
+    console.log("formData",formData)
     return apiClient.put('/user/' + user.id, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
